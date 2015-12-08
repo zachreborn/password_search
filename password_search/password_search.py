@@ -17,8 +17,8 @@ vlan_regex = r'''(\d{1,4},)+'''
 
 def argv_validation():
     """
-    Function which checks that the user has input arguments via argv, if not it asks the user for input.
-    :return: Root directory, file extension, and file to write log output to.
+    Checks that the user has input arguments via argv, if not it asks the user for input.
+    :return: String - root directory, file extension, and file to write log output to.
     """
     if len(argv) < 4:
         print('\nPlease provide an absolute directory to scan, filetype extension, and output file for results in order to begin.'
@@ -46,8 +46,8 @@ def argv_validation():
 def get_user_input(prompt):
     """
     Grabs and sanitizes user input either from argv or direct input.
-    :param prompt:
-    :return:
+    :param prompt: String - printed to the user which grab input.
+    :return: String
     """
     result = None
     while result is None:
@@ -60,9 +60,9 @@ def find_files(directory, file_type):
     """
     Function takes an input directory, and file type as strings then searches that directory and all subdirectories
     for a list of files. This list of files can then be acted upon.
-    :param directory:
-    :param file_type:
-    :return:
+    :param directory: String - root directory
+    :param file_type: String - file type extension
+    :return: List - all files with the defined
     """
     found_files = []
     for dirpath, dirnames, filenames in os.walk(directory):
@@ -73,10 +73,9 @@ def find_files(directory, file_type):
 
 def file_scanning(list_of_files, output_write_file):
     """
-
-    :param list_of_files:
-    :param output_write_file:
-    :return:
+    :param list_of_files: List - strings as specific files to act upon
+    :param output_write_file: String - file to write log output to
+    :return: None
     """
     for input_filename in list_of_files:
         write_file(output_write_file, 'Checking file: {0}\n'.format(input_filename))
@@ -92,13 +91,13 @@ def file_scanning(list_of_files, output_write_file):
             pass
 
 
-def line_search(line, output_file):
+def line_search(line, output_write_file):
     """
     Takes a string and passes it through some regular expressions. First check validates that the item is not devoid of
     a match. The following checks validate that the string does not match commonly used formats, such as dates, mac
     addresses, IP addresses, etc. Finally anything matching that is left over is written to a file.
-    :param line:
-    :param output_file:
+    :param line: String - line from a file
+    :param output_write_file: String - file to write log output to
     :return:
     """
     broken_up_line = line.split()
@@ -116,16 +115,16 @@ def line_search(line, output_file):
         elif password_findall(item, date_regex):
             pass
         else:
-            write_file(output_file, '    {0}\n'.format(password_findall(item, password_regex)))
+            write_file(output_write_file, '    {0}\n'.format(password_findall(item, password_regex)))
 
 
 def password_match(line, regex):
     """
     Regex function searches an input string for match with at least one special character, at least one number,
      and is at least six characters long. This merely verifies that a match exists, it does not return the matched line.
-    :param line: string
-    :param regex: Regular expression
-    :return: re.match
+    :param line: String - line from a file
+    :param regex: String - regular expression
+    :return: List - items matched by the regex
     """
     pattern = re.compile(regex)
     return pattern.match(line)
@@ -134,10 +133,10 @@ def password_match(line, regex):
 def password_findall(line, regex):
     """
     Regex function searches an input string for all matches with at least one special character,
-     at least one number, and is at least six characters long.
-    :param line:
-    :param regex:
-    :return:
+    at least one number, and is at least six characters long.
+    :param line: String - line from a file
+    :param regex: String - regular expression
+    :return: List - items matched by the regex
     """
     pattern = re.compile(regex)
     return pattern.findall(line)
@@ -155,17 +154,18 @@ def username_findall(line):
 
 def write_file(filename, line_to_write):
     """
-    Simple file writing function. Additions will be appended, no possibility of wiping or truncating the file.
-    :param filename:
-    :param line_to_write:
-    :return:
+    Simple file writing function. Additions will be appended.
+    :param filename: String - filename
+    :param line_to_write: String - line which will be written to file
+    :return: None
     """
     with open(filename, 'a') as out_f:
         out_f.write(line_to_write)
 
 
 def main():
-    r"""This script can be run via CLI with password_search.py <DIRECTORY> <FILETYPE> > <OUTPUT_FILE>.
+    r"""
+    This script can be run via CLI with password_search.py <DIRECTORY> <FILETYPE> > <OUTPUT_FILE>.
     Example:
       >  python password_search.py C:\Users\zhill .txt > C:\Users\zhill\search_output.log
     """
