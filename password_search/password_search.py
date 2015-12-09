@@ -6,6 +6,7 @@ import os
 
 # Regular Expression Patterns
 ########################################################################################################################
+# TODO Move these into two lists. The first will be the password regex list. The second the "bad" list or unlikely list.
 username_regex = r'''((?!.*[!#$%^*()+,\'"])[a-zA-Z0-9_\.\-@]{4,40})'''
 password_regex = r'''((?=.+[#?!@$%^&*.,()])(?=.+[0-9])[\w#?!@$%^&*.,()]{6,})'''
 ip_addresses_regex = r'''\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'''
@@ -100,6 +101,7 @@ def line_search(line, output_write_file):
     :param output_write_file: String - file to write log output to
     :return:
     """
+    # TODO Modify this function to change false positives from findall to search. Need to test output for results.
     broken_up_line = line.split()
     for item in broken_up_line:
         if password_match(item, password_regex) is None:
